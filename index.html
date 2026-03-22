@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roadmap OS | Premium Learning Dashboard</title>
+    <!-- Inter & JetBrains Mono for Professional Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { 
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    },
+                    colors: {
+                        brand: { 50: '#eff6ff', 100: '#dbeafe', 400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 900: '#1e3a8a' },
+                        purpleBrand: { 400: '#c084fc', 500: '#a855f7', 600: '#9333ea' },
+                        roseBrand: { 50: '#fff1f2', 100: '#ffe4e6', 400: '#fb7185', 500: '#f43f5e', 600: '#e11d48', 900: '#881337' },
+                        emeraldBrand: { 50: '#ecfdf5', 100: '#d1fae5', 400: '#34d399', 500: '#10b981', 600: '#059669', 900: '#064e3b' },
+                        success: { 400: '#34d399', 500: '#10b981', 600: '#059669' },
+                        // TRUE BLACK THEME
+                        dark: { bg: '#000000', panel: '#0a0a0a', panelHover: '#121212', border: '#1f1f1f', borderHover: '#2a2a2a' }
+                    },
+                    boxShadow: {
+                        'glow': '0 0 20px rgba(59, 130, 246, 0.15)',
+                        'glow-success': '0 0 20px rgba(16, 185, 129, 0.15)',
+                        'glow-purple': '0 0 20px rgba(168, 85, 247, 0.15)',
+                        'glow-rose': '0 0 30px rgba(244, 63, 94, 0.2)',
+                        'glow-emerald': '0 0 20px rgba(16, 185, 129, 0.15)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Smooth Scrolling and Custom Scrollbar */
+        html { scroll-behavior: smooth; }
+        body { -webkit-font-smoothing: antialiased; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .dark ::-webkit-scrollbar-thumb { background: #333; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .dark ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+        /* HCI: Editable Text Affordances */
+        [contenteditable="true"] {
+            border-bottom: 1px dashed transparent;
+            transition: all 0.2s ease;
+            cursor: text;
+        }
+        [contenteditable="true"]:hover { border-bottom-color: #94a3b8; }
+        .dark [contenteditable="true"]:hover { border-bottom-color: #444; }
+        [contenteditable="true"]:focus {
+            outline: none;
+            border-bottom-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.05);
+            border-radius: 4px;
+            padding: 0 4px;
+        }
+
+        /* Checkbox Animation */
+        .check-anim { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        input:checked + div .check-icon { opacity: 1; transform: scale(1); }
+        input:not(:checked) + div .check-icon { opacity: 0; transform: scale(0.5); }
+
+        /* Drag and Drop Visual Feedback */
+        .dragging { 
+            opacity: 0.5; 
+            transform: scale(0.98) rotate(1deg); 
+            box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.5) !important;
+            background: rgba(59, 130, 246, 0.03) !important;
+            border-color: #3b82f6 !important;
+            border-style: dashed !important;
+            z-index: 50;
+        }
+        .drag-over-top { border-top: 3px solid #3b82f6 !important; }
+        .drag-over-bottom { border-bottom: 3px solid #3b82f6 !important; }
+
+        /* Custom Circular Progress */
+        .circular-chart { display: block; margin: 0 auto; max-width: 80%; max-height: 250px; }
+        .circle-bg { fill: none; stroke: #eee; stroke-width: 3.8; }
+        .dark .circle-bg { stroke: #1f1f1f; }
+        .circle { fill: none; stroke-width: 2.8; stroke-linecap: round; transition: stroke-dasharray 1s ease-out, stroke 0.3s; }
+        
+        /* Module Glow effect for completed */
+        .module-completed { border-color: rgba(16, 185, 129, 0.3) !important; background: linear-gradient(to bottom right, rgba(16, 185, 129, 0.02), transparent) !important; }
+        
+        /* Blinking colon for digital clock */
+        .blink { animation: blinker 1s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0; } }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-dark-bg text-slate-800 dark:text-slate-300 h-screen flex overflow-hidden selection:bg-brand-500 selection:text-white transition-colors duration-300">
+
+    <!-- Sidebar Navigation -->
+    <nav class="w-72 bg-white dark:bg-dark-panel border-r border-slate-200 dark:border-dark-border flex flex-col justify-between h-full flex-shrink-0 z-20 shadow-sm transition-colors duration-300">
+        <div>
+            <!-- Branding -->
+            <div class="p-6 flex items-center gap-4 border-b border-slate-200 dark:border-dark-border">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white shadow-lg shadow-brand-500/20">
+                    <i class="fa-solid fa-layer-group text-lg"></i>
+                </div>
+                <h1 class="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white">Roadmap<span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-brand-600">OS</span></h1>
+            </div>
+
+            <div class="overflow-y-auto h-[calc(100vh-280px)]">
+                <!-- Navigation Links -->
+                <div class="px-4 pt-6 pb-2 text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">My Roadmaps</div>
+                <ul class="space-y-1 px-3">
+                    <li>
+                        <button onclick="switchTab('devops')" id="nav-devops" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 font-semibold transition-all group border border-brand-100 dark:border-brand-500/20">
+                            <i class="fa-solid fa-cloud group-hover:scale-110 transition-transform w-5"></i>
+                            <span>DevOps Engineering</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="switchTab('dsa')" id="nav-dsa" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-dark-border hover:text-slate-900 dark:hover:text-white font-semibold transition-all group border border-transparent">
+                            <i class="fa-solid fa-code group-hover:scale-110 transition-transform w-5"></i>
+                            <span>DSA & C++ Mastery</span>
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="px-4 pt-6 pb-2 text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">Student Hub</div>
+                <ul class="space-y-1 px-3">
+                    <li>
+                        <button onclick="switchTab('timetable')" id="nav-timetable" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-dark-border hover:text-slate-900 dark:hover:text-white font-semibold transition-all group border border-transparent">
+                            <i class="fa-solid fa-list-check group-hover:scale-110 transition-transform w-5"></i>
+                            <span>Daily Routine</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="switchTab('tools')" id="nav-tools" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-dark-border hover:text-slate-900 dark:hover:text-white font-semibold transition-all group border border-transparent">
+                            <i class="fa-solid fa-clock group-hover:scale-110 transition-transform w-5"></i>
+                            <span>Focus & Time</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="switchTab('calendar')" id="nav-calendar" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-dark-border hover:text-slate-900 dark:hover:text-white font-semibold transition-all group border border-transparent">
+                            <i class="fa-regular fa-calendar-check group-hover:scale-110 transition-transform w-5"></i>
+                            <span>Consistency Tracker</span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Footer / Progress / Theme -->
+        <div class="p-5 border-t border-slate-200 dark:border-dark-border space-y-6 bg-slate-50/50 dark:bg-black/20 shrink-0">
+            <!-- Circular Progress Widget -->
+            <div class="flex flex-col items-center">
+                <div class="relative w-24 h-24" id="nav-progress-container">
+                    <svg viewBox="0 0 36 36" class="circular-chart brand">
+                        <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        <path id="nav-circle-progress" class="circle stroke-brand-500" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    </svg>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                        <span id="nav-progress-text" class="text-xl font-black text-slate-800 dark:text-white">0%</span>
+                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest text-center leading-tight mt-0.5" id="nav-progress-label">DevOps</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Theme Switcher -->
+            <button onclick="toggleTheme()" class="w-full flex items-center justify-between px-4 py-2.5 rounded-xl border border-slate-200 dark:border-dark-border bg-white dark:bg-dark-panel hover:border-brand-500/50 dark:hover:border-brand-500/50 transition-all text-sm font-semibold group shadow-sm">
+                <span class="text-slate-600 dark:text-slate-300 group-hover:text-brand-500 dark:group-hover:text-brand-400 transition-colors">Toggle Theme</span>
+                <div class="flex items-center gap-2 text-slate-400 dark:text-slate-500 group-hover:text-brand-500 dark:group-hover:text-brand-400 transition-colors">
+                    <i class="fa-solid fa-sun" id="icon-light"></i>
+                    <i class="fa-solid fa-moon hidden" id="icon-dark"></i>
+                </div>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 overflow-y-auto relative scroll-smooth bg-slate-50 dark:bg-dark-bg transition-colors duration-300" id="main-scroll">
+        
+        <!-- SHARED HEADER FOR ROADMAPS & TIMETABLE -->
+        <div id="shared-roadmap-header" class="p-8 md:p-12 max-w-[1400px] mx-auto block pb-4">
+            <!-- Hero / Header section -->
+            <header class="mb-10 pt-4 text-center md:text-left">
+                <h2 class="text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight mb-4" id="roadmap-header-title">
+                    DevOps <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-brand-600">Engineering</span>
+                </h2>
+                <p class="text-slate-500 dark:text-slate-400 text-lg max-w-2xl font-medium leading-relaxed mx-auto md:mx-0" id="roadmap-header-desc">
+                    Master the cloud native ecosystem. Track your progress, edit topics inline, and build your career roadmap.
+                </p>
+            </header>
+
+            <!-- Quick Dashboard Stats (Hidden on Timetable) -->
+            <div id="roadmap-stats-container" class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8 transition-all">
+                <div class="bg-white dark:bg-dark-panel border border-slate-200 dark:border-dark-border rounded-2xl p-6 shadow-sm flex items-center gap-5 hover:-translate-y-1 transition-transform duration-300">
+                    <div class="w-12 h-12 rounded-full bg-brand-50 dark:bg-brand-500/10 flex items-center justify-center text-brand-600 dark:text-brand-400 text-xl" id="stat-icon-1">
+                        <i class="fa-solid fa-cubes"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-1" id="stat-title-1">Modules Done</p>
+                        <h4 class="text-2xl font-black text-slate-900 dark:text-white" id="stat-modules">0 / 0</h4>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-dark-panel border border-slate-200 dark:border-dark-border rounded-2xl p-6 shadow-sm flex items-center gap-5 hover:-translate-y-1 transition-transform duration-300">
+                    <div class="w-12 h-12 rounded-full bg-orange-50 dark:bg-orange-500/10 flex items-center justify-center text-orange-600 dark:text-orange-400 text-xl" id="stat-icon-2">
+                        <i class="fa-solid fa-list-check"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-1" id="stat-title-2">Topics Left</p>
+                        <h4 class="text-2xl font-black text-slate-900 dark:text-white" id="stat-topics">0</h4>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-dark-panel border border-slate-200 dark:border-dark-border rounded-2xl p-6 shadow-sm flex items-center gap-5 hover:-translate-y-1 transition-transform duration-300">
+                    <div class="w-12 h-12 rounded-full bg-success-50 dark:bg-success-500/10 flex items-center justify-center text-success-600 dark:text-success-400 text-xl" id="stat-icon-3">
+                        <i class="fa-solid fa-fire"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-1">Study Streak</p>
+                        <h4 class="text-2xl font-black text-slate-900 dark:text-white" id="stat-streak">0 Days</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ROADMAP VERTICAL VIEW (DevOps / DSA) -->
+        <div id="roadmap-list-view" class="px-8 md:px-12 max-w-6xl mx-auto block pb-32">
+            <!-- Modules Container -->
+            <div id="modules-container" class="space-y-6">
+                <!-- Modules injected here -->
+            </div>
+            <!-- Create Module Button -->
+            <button onclick="addModule()" class="mt-8 w-full py-6 border-2 border-dashed border-slate-300 dark:border-dark-border rounded-2xl text-slate-500 dark:text-slate-400 hover:border-brand-500 hover:text-brand-600 dark:hover:border-brand-500 dark:hover:text-brand-400 bg-white/50 dark:bg-dark-panel/30 hover:bg-brand-50 dark:hover:bg-brand-500/5 transition-all flex items-center justify-center gap-3 font-semibold text-lg hover:shadow-glow" id="add-module-btn">
+                <i class="fa-solid fa-plus-circle text-2xl"></i> Create Custom Module
+            </button>
+        </div>
+
+        <!-- TIMETABLE HORIZONTAL KANBAN VIEW (Upgraded Centered Tabs + Free Height) -->
+        <div id="timetable-board-view" class="px-8 md:px-12 max-w-full mx-auto hidden pb-32">
+            
+            <!-- Centered Timetable Tabs UI -->
+            <div class="flex justify-start md:justify-center w-full mb-10 overflow-x-auto pb-2">
+                <div class="flex space-x-2 bg-slate-200/50 dark:bg-[#111] p-1.5 rounded-2xl w-full max-w-lg border border-slate-200 dark:border-[#222] shadow-sm min-w-max">
+                    <button onclick="setTimetableTab('weekdays')" id="tt-tab-weekdays" class="flex-1 py-3 px-6 rounded-xl bg-white dark:bg-[#222] text-emeraldBrand-600 dark:text-emeraldBrand-400 font-bold shadow-sm transition-all text-sm border border-slate-200/50 dark:border-[#333] tracking-wide">Weekdays</button>
+                    <button onclick="setTimetableTab('weekends')" id="tt-tab-weekends" class="flex-1 py-3 px-6 rounded-xl text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 font-semibold transition-all text-sm border border-transparent tracking-wide">Weekends</button>
+                    <button onclick="setTimetableTab('targets')" id="tt-tab-targets" class="flex-1 py-3 px-6 rounded-xl text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 font-semibold transition-all text-sm border border-transparent tracking-wide">Targets</button>
+                </div>
+            </div>
+
+            <!-- Kanban Columns Container (Free Style Full Height) -->
+            <div id="timetable-board" class="flex overflow-x-auto gap-6 pb-6 pt-2 items-start snap-x">
+                <!-- Columns injected here -->
+            </div>
+            
+            <!-- Create Column Button -->
+            <button onclick="addModule()" class="mt-4 w-full md:w-[400px] py-6 border-2 border-dashed border-slate-300 dark:border-dark-border rounded-3xl text-slate-500 dark:text-slate-400 hover:border-emeraldBrand-500 hover:text-emeraldBrand-600 dark:hover:border-emeraldBrand-500 dark:hover:text-emeraldBrand-400 bg-white/50 dark:bg-dark-panel/30 hover:bg-emeraldBrand-50 dark:hover:bg-emeraldBrand-500/5 transition-all flex items-center justify-center gap-3 font-semibold hover:shadow-glow-emerald">
+                <i class="fa-solid fa-plus-circle text-xl"></i> Add Custom Column
+            </button>
+        </div>
+
+        <!-- TOOLS VIEW -->
+        <div id="tools-view" class="p-8 md:p-12 max-w-6xl mx-auto hidden pb-32">
+            <header class="mb-10 pt-4">
+                <h2 class="text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight mb-4">Focus & <span class="text-transparent bg-clip-text bg-gradient-to-r from-roseBrand-400 to-roseBrand-600">Time</span></h2>
+                <p class="text-slate-500 dark:text-slate-400 text-lg font-medium">Manage your study sessions, track time, and stay highly productive.</p>
+            </header>
+
+            <!-- Massive Digital Clock -->
+            <div class="bg-white dark:bg-[#0a0a0a] rounded-[2.5rem] border border-slate-200/80 dark:border-[#1a1a1a] shadow-2xl shadow-slate-200/50 dark:shadow-none p-10 md:p-16 mb-10 relative overflow-hidden flex flex-col items-center justify-center text-center group transition-all duration-500">
+                <div class="absolute inset-0 bg-gradient-to-b from-roseBrand-500/5 to-transparent dark:from-roseBrand-500/5 pointer-events-none"></div>
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-2/3 h-[2px] bg-gradient-to-r from-transparent via-roseBrand-500/50 to-transparent"></div>
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-[10px] bg-roseBrand-500/20 blur-xl"></div>
+                
+                <h1 id="digital-clock" class="text-[5.5rem] md:text-[8rem] font-bold font-sans tabular-nums tracking-tighter text-slate-800 dark:text-white mb-1 z-10 leading-none drop-shadow-sm"></h1>
+                <p id="digital-date" class="text-sm md:text-lg font-semibold text-slate-500 dark:text-slate-400 z-10 uppercase tracking-[0.2em] mt-4"></p>
+            </div>
+
+            <!-- Time Tools Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                <!-- Pomodoro Timer -->
+                <div class="bg-white dark:bg-dark-panel rounded-[2rem] border border-slate-200 dark:border-[#1a1a1a] p-8 md:p-10 shadow-sm relative overflow-hidden flex flex-col">
+                    <div class="absolute top-0 left-0 w-full h-[3px] bg-roseBrand-500"></div>
+                    <div class="flex justify-between items-center mb-8">
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-3"><i class="fa-solid fa-stopwatch text-roseBrand-500"></i> Pomodoro</h3>
+                        <div class="flex gap-2 text-[10px] font-black uppercase tracking-wider">
+                            <button onclick="setPomoMode('work')" id="btn-pomo-work" class="px-3 py-1.5 rounded-md bg-roseBrand-500 text-white transition-all">Work</button>
+                            <button onclick="setPomoMode('break')" id="btn-pomo-break" class="px-3 py-1.5 rounded-md bg-slate-100 dark:bg-dark-bg text-slate-500 transition-all hover:bg-slate-200 dark:hover:text-slate-300">Break</button>
+                        </div>
+                    </div>
+                    <div class="text-center mb-10 flex-1 flex flex-col justify-center">
+                        <div id="pomo-display" class="text-6xl md:text-7xl font-bold font-sans tabular-nums text-slate-800 dark:text-white tracking-tighter leading-none">25<span class="text-slate-300 dark:text-slate-700 mx-1 font-light">:</span>00</div>
+                        <p id="pomo-status" class="text-xs font-bold text-roseBrand-500 uppercase tracking-[0.15em] mt-4">Ready to focus</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 mt-auto">
+                        <button onclick="togglePomo()" id="pomo-toggle-btn" class="py-4 rounded-xl bg-roseBrand-500 hover:bg-roseBrand-600 text-white font-bold transition-all shadow-lg shadow-roseBrand-500/20 active:scale-95">Start</button>
+                        <button onclick="resetPomo()" class="py-4 rounded-xl bg-slate-100 dark:bg-dark-bg hover:bg-slate-200 dark:hover:bg-[#1a1a1a] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-[#222] font-bold transition-all active:scale-95">Reset</button>
+                    </div>
+                </div>
+
+                <!-- Stopwatch -->
+                <div class="bg-white dark:bg-dark-panel rounded-[2rem] border border-slate-200 dark:border-[#1a1a1a] p-8 md:p-10 shadow-sm relative overflow-hidden flex flex-col">
+                    <div class="absolute top-0 left-0 w-full h-[3px] bg-brand-500"></div>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-8 flex items-center gap-3"><i class="fa-solid fa-stopwatch-20 text-brand-500"></i> Stopwatch</h3>
+                    <div class="text-center mb-10 flex-1 flex flex-col justify-center">
+                        <div id="sw-display" class="text-5xl md:text-6xl font-bold font-sans tabular-nums text-slate-800 dark:text-white tracking-tighter leading-none">00<span class="text-slate-300 dark:text-slate-700 mx-1 font-light">:</span>00<span class="text-xl md:text-3xl text-slate-400 font-medium ml-1">.00</span></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 mt-auto">
+                        <button onclick="toggleSw()" id="sw-toggle-btn" class="py-4 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-bold transition-all shadow-lg shadow-brand-500/20 active:scale-95">Start</button>
+                        <button onclick="resetSw()" class="py-4 rounded-xl bg-slate-100 dark:bg-dark-bg hover:bg-slate-200 dark:hover:bg-[#1a1a1a] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-[#222] font-bold transition-all active:scale-95">Reset</button>
+                    </div>
+                </div>
+
+                <!-- Alarm System -->
+                <div class="bg-white dark:bg-dark-panel rounded-[2rem] border border-slate-200 dark:border-[#1a1a1a] p-8 md:p-10 shadow-sm relative overflow-hidden flex flex-col">
+                    <div class="absolute top-0 left-0 w-full h-[3px] bg-purpleBrand-500"></div>
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-8 flex items-center gap-3"><i class="fa-solid fa-bell text-purpleBrand-500"></i> Set Alarm</h3>
+                    <div class="mb-6 flex-1">
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-3 uppercase tracking-wider">Target Time</label>
+                        <input type="time" id="alarm-input" class="w-full bg-slate-50 dark:bg-[#0f0f0f] border border-slate-200 dark:border-[#222] text-slate-900 dark:text-white text-2xl font-bold font-sans tabular-nums tracking-tighter p-4 rounded-xl focus:ring-2 focus:ring-purpleBrand-500/50 outline-none transition-all">
+                        <div id="alarm-status-container" class="hidden text-center mt-6 p-4 rounded-xl bg-purpleBrand-50 dark:bg-purpleBrand-500/10 border border-purpleBrand-200 dark:border-purpleBrand-500/20 transition-all">
+                            <p class="text-xs font-bold text-purpleBrand-600 dark:text-purpleBrand-400 uppercase tracking-widest mb-1">Alarm Active</p>
+                            <p class="font-black text-xl text-purpleBrand-700 dark:text-purpleBrand-300 tracking-tighter" id="alarm-display-time">--:--</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 mt-auto">
+                        <button onclick="setAlarm()" id="alarm-set-btn" class="py-4 rounded-xl bg-purpleBrand-500 hover:bg-purpleBrand-600 text-white font-bold transition-all shadow-lg shadow-purpleBrand-500/20 active:scale-95">Set</button>
+                        <button onclick="clearAlarm()" class="py-4 rounded-xl bg-slate-100 dark:bg-dark-bg hover:bg-slate-200 dark:hover:bg-[#1a1a1a] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-[#222] font-bold transition-all active:scale-95">Clear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CALENDAR VIEW -->
+        <div id="calendar-view" class="p-8 md:p-12 max-w-5xl mx-auto hidden pb-32">
+            <header class="mb-10 pt-4">
+                <h2 class="text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight mb-4">Consistency <span class="text-transparent bg-clip-text bg-gradient-to-r from-success-400 to-success-600">Tracker</span></h2>
+                <p class="text-slate-500 dark:text-slate-400 text-lg font-medium">Daily action builds mastery. Log your study days below regardless of the subject.</p>
+            </header>
+
+            <div class="bg-white dark:bg-dark-panel rounded-3xl border border-slate-200 dark:border-dark-border shadow-xl shadow-slate-200/20 dark:shadow-none p-8 md:p-10 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-success-500/10 rounded-full blur-3xl -z-10 pointer-events-none translate-x-1/2 -translate-y-1/2"></div>
+                <div class="flex justify-between items-center mb-10">
+                    <button onclick="changeMonth(-1)" class="w-12 h-12 flex items-center justify-center rounded-2xl border border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-bg text-slate-600 dark:text-slate-400 hover:text-brand-500 dark:hover:border-brand-500/50 transition-all hover:shadow-md"><i class="fa-solid fa-chevron-left"></i></button>
+                    <h3 id="current-month-year" class="text-3xl font-black text-slate-900 dark:text-white tracking-tight"></h3>
+                    <button onclick="changeMonth(1)" class="w-12 h-12 flex items-center justify-center rounded-2xl border border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-bg text-slate-600 dark:text-slate-400 hover:text-brand-500 dark:hover:border-brand-500/50 transition-all hover:shadow-md"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+                <div class="grid grid-cols-7 gap-3 md:gap-5 text-center mb-4 text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+                    <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+                </div>
+                <div id="calendar-grid" class="grid grid-cols-7 gap-3 md:gap-5"></div>
+            </div>
+            <div class="mt-10 flex items-center justify-center gap-8 text-sm font-semibold text-slate-600 dark:text-slate-400 bg-white dark:bg-dark-panel py-4 px-8 rounded-full border border-slate-200 dark:border-dark-border w-max mx-auto shadow-sm">
+                <div class="flex items-center gap-3"><div class="w-4 h-4 rounded bg-slate-100 dark:bg-dark-bg border border-slate-300 dark:border-dark-border"></div><span>Not Studied</span></div>
+                <div class="flex items-center gap-3"><div class="w-4 h-4 rounded bg-success-500 border border-success-600 shadow-glow-success"></div><span class="text-slate-900 dark:text-white">Goal Achieved</span></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Global Alarm Notification Modal -->
+    <div id="alarm-modal" class="fixed inset-0 z-50 bg-black/80 hidden items-center justify-center backdrop-blur-sm transition-all duration-300 opacity-0">
+        <div class="bg-white dark:bg-dark-panel rounded-3xl p-10 max-w-md w-full text-center border-2 border-purpleBrand-500 shadow-[0_0_50px_rgba(168,85,247,0.4)] transform scale-95 transition-transform duration-300" id="alarm-modal-content">
+            <div class="w-24 h-24 bg-purpleBrand-500/20 text-purpleBrand-500 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse">
+                <i class="fa-solid fa-bell text-5xl animate-bounce"></i>
+            </div>
+            <h2 class="text-3xl font-black text-slate-900 dark:text-white mb-2">Time's Up!</h2>
+            <p class="text-slate-500 dark:text-slate-400 mb-8 font-medium">Your scheduled alarm is ringing.</p>
+            <button onclick="dismissAlarm()" class="w-full py-4 rounded-xl bg-purpleBrand-500 hover:bg-purpleBrand-600 text-white font-bold text-lg shadow-lg shadow-purpleBrand-500/30 transition-all active:scale-95">Dismiss Alarm</button>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. DEFAULT DATA ---
+
+        // A) DevOps Default Data
+        const defaultDevOpsData = [
+            { id: 'm1', title: '📦 MODULE 1 — Computer Fundamentals', topics: [ 
+                {id: 't1_1', title: 'Computer architecture basics (CPU, RAM, Disk)', done: false}, 
+                {id: 't1_2', title: 'Storage types (HDD, SSD, NVMe)', done: false}, 
+                {id: 't1_3', title: 'File systems (FAT, NTFS, ext4, xfs)', done: false}, 
+                {id: 't1_4', title: 'BIOS / UEFI basics', done: false},
+                {id: 't1_5', title: 'Virtualization basics (Hypervisors Type 1 & 2, Virtual machines)', done: false},
+                {id: 't1_6', title: 'Tools: VirtualBox, VMware', done: false}
+            ]},
+            { id: 'm2', title: '🐧 MODULE 2 — Linux (Very Deep)', topics: [ 
+                {id: 't2_1', title: 'Linux Basics (Distributions: Ubuntu, CentOS, RedHat)', done: false}, 
+                {id: 't2_2', title: 'Linux installation & File system hierarchy', done: false}, 
+                {id: 't2_3', title: 'Linux commands (ls, cd, cp, mv, rm, find, grep, awk, sed, tar, zip, chmod, chown)', done: false}, 
+                {id: 't2_4', title: 'Linux Admin (User/Group management, Permissions, ACL, SUID/SGID, Sticky bit)', done: false}, 
+                {id: 't2_5', title: 'Process management, System services & System logs (systemctl, journalctl)', done: false}, 
+                {id: 't2_6', title: 'Linux Networking (SSH, SCP, FTP, NFS, DNS config, iptables, firewalld)', done: false},
+                {id: 't2_7', title: 'Linux Storage (Disk management, Partitioning, Mounting, LVM, RAID basics)', done: false},
+                {id: 't2_8', title: 'Linux Security (SELinux, AppArmor, Hardening, SSH security)', done: false}
+            ]},
+            { id: 'm3', title: '🌐 MODULE 3 — Networking', topics: [ 
+                {id: 't3_1', title: 'Networking Basics (OSI Model, TCP/IP Model, IPv4, IPv6, Subnetting, CIDR)', done: false}, 
+                {id: 't3_2', title: 'Core Networking (DNS, DHCP, NAT, ARP, ICMP)', done: false}, 
+                {id: 't3_3', title: 'Protocols (HTTP, HTTPS, FTP, SMTP, SNMP, SSH)', done: false}, 
+                {id: 't3_4', title: 'Network Devices (Routers, Switches, Firewalls, Load balancers)', done: false},
+                {id: 't3_5', title: 'Network Security Basics (Firewalls, IDS / IPS, VPN, TLS / SSL)', done: false}
+            ]},
+            { id: 'm4', title: '💻 MODULE 4 — Programming & Scripting', topics: [ 
+                {id: 't4_1', title: 'Python Basics (Variables, Data types, Loops, Functions, Classes, Modules)', done: false}, 
+                {id: 't4_2', title: 'Python Advanced (File handling, Exception handling, JSON, YAML)', done: false}, 
+                {id: 't4_3', title: 'Python Integrations (REST APIs, Requests library, Automation scripts)', done: false},
+                {id: 't4_4', title: 'Bash Scripting (Variables, Loops, Conditions, Functions, Cron jobs)', done: false},
+                {id: 't4_5', title: 'Optional (Recommended): Go (Golang), JavaScript basics', done: false}
+            ]},
+            { id: 'm5', title: '🔧 MODULE 5 — Version Control', topics: [ 
+                {id: 't5_1', title: 'Git Core (git init, clone, commit, push, pull, branch, merge, rebase)', done: false}, 
+                {id: 't5_2', title: 'Git Advanced (tags, stash, conflict resolution)', done: false},
+                {id: 't5_3', title: 'Platforms: GitHub, GitLab, Bitbucket', done: false}
+            ]},
+            { id: 'm6', title: '🐳 MODULE 6 — Containers', topics: [ 
+                {id: 't6_1', title: 'Docker (Deep) & Docker architecture', done: false}, 
+                {id: 't6_2', title: 'Docker CLI, Dockerfile, Docker images, Docker containers', done: false}, 
+                {id: 't6_3', title: 'Docker Volumes & Networks', done: false},
+                {id: 't6_4', title: 'Docker Compose', done: false},
+                {id: 't6_5', title: 'Multi-stage builds, Image optimization, Registry usage', done: false}
+            ]},
+            { id: 'm7', title: '☸️ MODULE 7 — Container Orchestration', topics: [ 
+                {id: 't7_1', title: 'Kubernetes (Deep) & Architecture', done: false}, 
+                {id: 't7_2', title: 'Workloads (Pods, ReplicaSets, Deployments, StatefulSets, DaemonSets)', done: false}, 
+                {id: 't7_3', title: 'Networking & Routing (Services, Ingress)', done: false},
+                {id: 't7_4', title: 'Config & Security (ConfigMaps, Secrets, Namespaces, RBAC, Network policies)', done: false},
+                {id: 't7_5', title: 'Management (Resource quotas, Autoscaling, Helm, Operators)', done: false}
+            ]},
+            { id: 'm8', title: '🔁 MODULE 8 — CI/CD Pipelines', topics: [ 
+                {id: 't8_1', title: 'Tools (Jenkins, GitHub Actions, GitLab CI)', done: false}, 
+                {id: 't8_2', title: 'Pipeline design & Automation workflows', done: false},
+                {id: 't8_3', title: 'Build automation & Testing automation', done: false},
+                {id: 't8_4', title: 'Deployment automation & Artifact management', done: false},
+                {id: 't8_5', title: 'Pipeline security & Pipeline optimization', done: false}
+            ]},
+            { id: 'm9', title: '🏗️ MODULE 9 — Infrastructure as Code', topics: [ 
+                {id: 't9_1', title: 'Terraform Concepts (Providers, Resources, Variables, Modules)', done: false}, 
+                {id: 't9_2', title: 'Terraform State & Environments (Remote state, Workspaces)', done: false},
+                {id: 't9_3', title: 'Configuration Management Tools: Ansible', done: false},
+                {id: 't9_4', title: 'Ansible Topics (Inventory, Playbooks, Roles, Templates, Automation workflows)', done: false}
+            ]},
+            { id: 'm10', title: '📊 MODULE 10 — Monitoring & Logging', topics: [ 
+                {id: 't10_1', title: 'Monitoring Tools: Prometheus, Grafana', done: false}, 
+                {id: 't10_2', title: 'Logging Tools: ELK Stack (Elasticsearch, Logstash, Kibana)', done: false},
+                {id: 't10_3', title: 'Topics: Metrics, Logs, Alerts, Dashboards', done: false}
+            ]},
+            { id: 'm11', title: '☁️ MODULE 11 — Cloud Fundamentals', topics: [ 
+                {id: 't11_1', title: 'Choose Platform: AWS (recommended), Azure, or GCP', done: false}, 
+                {id: 't11_2', title: 'Compute: Virtual machines, Auto scaling', done: false},
+                {id: 't11_3', title: 'Storage: Object storage, Block storage, File storage', done: false},
+                {id: 't11_4', title: 'Networking: VPC, Subnets, Routing', done: false},
+                {id: 't11_5', title: 'Identity (IAM), Load balancing, DNS', done: false}
+            ]},
+            { id: 'm12', title: '🔐 MODULE 12 — Security Fundamentals', topics: [ 
+                {id: 't12_1', title: 'Core Topics: CIA triad, Authentication, Authorization', done: false}, 
+                {id: 't12_2', title: 'Cryptography: Encryption, Hashing, PKI, TLS', done: false},
+                {id: 't12_3', title: 'Management: Secrets management, Vulnerability basics', done: false}
+            ]},
+            { id: 'm13', title: '🔧 ADVANCED DEVOPS SYLLABUS', topics: [ 
+                {id: 't13_1', title: 'Advanced CI/CD (Blue/Green, Canary, Rolling updates, Feature flags)', done: false}, 
+                {id: 't13_2', title: 'Advanced Kubernetes (Helm charts, Kubernetes operators)', done: false},
+                {id: 't13_3', title: 'Service mesh (Tools: Istio, Linkerd)', done: false},
+                {id: 't13_4', title: 'Release Management (Versioning strategies, Nexus, Artifactory)', done: false},
+                {id: 't13_5', title: 'Performance Engineering (Load testing, Capacity planning, JMeter)', done: false}
+            ]},
+            { id: 'm14', title: '☁️ CLOUD DEVOPS SYLLABUS', topics: [ 
+                {id: 't14_1', title: 'Cloud Platform Deep Dive (AWS Example)', done: false}, 
+                {id: 't14_2', title: 'Compute Services (EC2, Lambda, ECS, EKS)', done: false},
+                {id: 't14_3', title: 'Storage Services (S3, EBS, EFS)', done: false},
+                {id: 't14_4', title: 'Networking (VPC, NAT Gateway, Route tables, Security groups)', done: false},
+                {id: 't14_5', title: 'Databases (RDS, DynamoDB)', done: false},
+                {id: 't14_6', title: 'Serverless (Lambda, API Gateway, Event-driven architecture)', done: false},
+                {id: 't14_7', title: 'Cloud Cost Optimization (Billing monitoring, Resource optimization)', done: false}
+            ]},
+            { id: 'm15', title: '🔐 DEVSECOPS SYLLABUS', topics: [ 
+                {id: 't15_1', title: 'Application Security (SAST, DAST, SCA)', done: false}, 
+                {id: 't15_2', title: 'AppSec Tools (SonarQube, Snyk)', done: false},
+                {id: 't15_3', title: 'Container Security Topics (Image scanning, Runtime security)', done: false},
+                {id: 't15_4', title: 'Container Security Tools (Trivy, Clair)', done: false},
+                {id: 't15_5', title: 'Secrets Management (Tools: HashiCorp Vault)', done: false},
+                {id: 't15_6', title: 'Compliance Automation (Standards: CIS benchmarks, OWASP Top 10)', done: false}
+            ]},
+            { id: 'm16', title: '🛡️ CLOUD SECURITY SYLLABUS', topics: [ 
+                {id: 't16_1', title: 'Cloud Security Architecture (Shared responsibility model, Threat models)', done: false}, 
+                {id: 't16_2', title: 'Identity Security (IAM roles, MFA, Identity federation)', done: false},
+                {id: 't16_3', title: 'Data Security (Encryption at rest, Encryption in transit, Tools: KMS)', done: false},
+                {id: 't16_4', title: 'Threat Detection (Tools: GuardDuty, Security Hub)', done: false},
+                {id: 't16_5', title: 'Compliance Standards (ISO 27001, SOC 2, PCI-DSS)', done: false}
+            ]}
+        ];
+
+        // B) DSA Default Data
+        const defaultDSAData = [
+            { id: 'dsa_m0', title: '🟢 Phase 0 — C++ Fundamentals', topics: [
+                {id: 'dsa_t0_1', title: 'Input/Output (cin, cout, fast I/O)', done: false},
+                {id: 'dsa_t0_2', title: 'Data Types & Operators', done: false},
+                {id: 'dsa_t0_3', title: 'Conditional Statements (if, else, switch) & Loops', done: false},
+                {id: 'dsa_t0_4', title: 'Functions, Arrays, Strings (std::string)', done: false},
+                {id: 'dsa_t0_5', title: 'Pointers & Recursion Basics', done: false},
+                {id: 'dsa_t0_6', title: 'C++ STL (vector, map, set, priority_queue, pair, sort)', done: false}
+            ]},
+            { id: 'dsa_m1', title: '🟡 Phase 1 — Time & Space Complexity', topics: [
+                {id: 'dsa_t1_1', title: 'Big O notation & Time complexity analysis', done: false},
+                {id: 'dsa_t1_2', title: 'Space complexity & Best/Worst/Avg case', done: false},
+                {id: 'dsa_t1_3', title: 'Common complexities (O(1), O(log n), O(n), O(n log n), O(n²))', done: false},
+                {id: 'dsa_t1_4', title: 'Practice: Analyze nested loops, Recursion, Binary search', done: false}
+            ]},
+            { id: 'dsa_m2', title: '🔵 Phase 2 — Arrays & Strings (Core)', topics: [
+                {id: 'dsa_t2_1', title: 'Array Traversal, Searching, Sorting basics', done: false},
+                {id: 'dsa_t2_2', title: 'Prefix Sum & Sliding Window', done: false},
+                {id: 'dsa_t2_3', title: 'Two Pointer technique & Kadane’s Algorithm', done: false},
+                {id: 'dsa_t2_4', title: 'String traversal, Palindrome, Anagram, Pattern matching', done: false},
+                {id: 'dsa_t2_5', title: 'Must Practice: Two Sum, Maximum Subarray, Move Zeroes', done: false}
+            ]},
+            { id: 'dsa_m3', title: '🟣 Phase 3 — Recursion & Backtracking', topics: [
+                {id: 'dsa_t3_1', title: 'Base case, Recursive tree, Tail recursion, Stack space', done: false},
+                {id: 'dsa_t3_2', title: 'Backtracking: Subsets, Permutations, Combination Sum', done: false},
+                {id: 'dsa_t3_3', title: 'Backtracking: N-Queens, Sudoku Solver', done: false}
+            ]},
+            { id: 'dsa_m4', title: '🟠 Phase 4 — Sorting & Searching', topics: [
+                {id: 'dsa_t4_1', title: 'Sorting (Bubble, Selection, Insertion, Merge, Quick)', done: false},
+                {id: 'dsa_t4_2', title: 'Stable vs unstable, In-place sorting', done: false},
+                {id: 'dsa_t4_3', title: 'Linear Search & Binary Search', done: false},
+                {id: 'dsa_t4_4', title: 'Binary Search on Answer, Lower/Upper Bound', done: false}
+            ]},
+            { id: 'dsa_m5', title: '🔴 Phase 5 — Linked List', topics: [
+                {id: 'dsa_t5_1', title: 'Singly, Doubly, and Circular Linked List', done: false},
+                {id: 'dsa_t5_2', title: 'Operations: Insert, Delete, Reverse, Find Middle', done: false},
+                {id: 'dsa_t5_3', title: 'Must Practice: Reverse, Detect Cycle (Floyd’s), Merge Lists', done: false}
+            ]},
+            { id: 'dsa_m6', title: '🟤 Phase 6 — Stack & Queue', topics: [
+                {id: 'dsa_t6_1', title: 'Stack Implementation, Monotonic Stack', done: false},
+                {id: 'dsa_t6_2', title: 'Next Greater Element, Expression Evaluation', done: false},
+                {id: 'dsa_t6_3', title: 'Queue, Circular Queue, Deque', done: false}
+            ]},
+            { id: 'dsa_m7', title: '🌳 Phase 7 — Trees', topics: [
+                {id: 'dsa_t7_1', title: 'Traversals: Inorder, Preorder, Postorder, Level Order', done: false},
+                {id: 'dsa_t7_2', title: 'Tree Properties: Height, Diameter, Balanced', done: false},
+                {id: 'dsa_t7_3', title: 'Binary Search Tree (BST): Insert, Delete, Search, Validate', done: false}
+            ]},
+            { id: 'dsa_m8', title: '🌲 Phase 8 — Heap / Priority Queue', topics: [
+                {id: 'dsa_t8_1', title: 'Min Heap, Max Heap, Heapify, Heap Sort', done: false},
+                {id: 'dsa_t8_2', title: 'Must Practice: K Largest Elements, Merge K Sorted Arrays', done: false}
+            ]},
+            { id: 'dsa_m9', title: '🕸️ Phase 9 — Hashing', topics: [
+                {id: 'dsa_t9_1', title: 'Hash tables & Collision handling', done: false},
+                {id: 'dsa_t9_2', title: 'Frequency counting', done: false},
+                {id: 'dsa_t9_3', title: 'Practice: Two Sum, Subarray with given sum, Longest sequence', done: false}
+            ]},
+            { id: 'dsa_m10', title: '🌐 Phase 10 — Graphs', topics: [
+                {id: 'dsa_t10_1', title: 'Representation: Adjacency Matrix, Adjacency List', done: false},
+                {id: 'dsa_t10_2', title: 'Traversal: BFS, DFS', done: false},
+                {id: 'dsa_t10_3', title: 'Advanced: Topological Sort, Dijkstra Algorithm', done: false},
+                {id: 'dsa_t10_4', title: 'Advanced: Bellman-Ford, Floyd-Warshall', done: false},
+                {id: 'dsa_t10_5', title: 'Minimum Spanning Tree: Kruskal, Prim', done: false}
+            ]},
+            { id: 'dsa_m11', title: '🧠 Phase 11 — Dynamic Programming', topics: [
+                {id: 'dsa_t11_1', title: 'Basic: Fibonacci, Climbing Stairs, Coin Change', done: false},
+                {id: 'dsa_t11_2', title: 'Intermediate: Knapsack, LCS, Matrix Chain Multiplication', done: false},
+                {id: 'dsa_t11_3', title: 'Advanced: DP on Trees, DP on Strings, Bitmask DP', done: false}
+            ]},
+            { id: 'dsa_m12', title: '⚙️ Phase 12 — Greedy Algorithms', topics: [
+                {id: 'dsa_t12_1', title: 'Activity Selection & Job Scheduling', done: false},
+                {id: 'dsa_t12_2', title: 'Huffman Coding & Fractional Knapsack', done: false}
+            ]},
+            { id: 'dsa_m13', title: '🧩 Phase 13 — Advanced Topics', topics: [
+                {id: 'dsa_t13_1', title: 'Tries & Disjoint Set (Union-Find)', done: false},
+                {id: 'dsa_t13_2', title: 'Segment Tree & Fenwick Tree (BIT)', done: false},
+                {id: 'dsa_t13_3', title: 'Suffix Arrays, KMP Algorithm, Rabin-Karp', done: false}
+            ]}
+        ];
+
+        // C) Timetable / Daily Routine Default Data (With Tabs / Categories added)
+        // Using v4 key logic via explicit string design
+        const defaultTimetableData = [
+            { id: 'tt_m1', title: 'MONDAY – FRIDAY', category: 'weekdays', topics: [
+                {id: 'tt_t1_1', title: '06:30 AM  •  🌅 Wake up + freshen up', done: false},
+                {id: 'tt_t1_2', title: '06:40 AM  •  🧠 Easy DSA (1 easy question)', done: false},
+                {id: 'tt_t1_3', title: '07:00 AM  •  🗣️ English Speaking', done: false},
+                {id: 'tt_t1_4', title: '07:20 AM  •  🍳 Breakfast', done: false},
+                {id: 'tt_t1_5', title: '07:30 AM  •  🚌 Travel to college', done: false},
+                {id: 'tt_t1_6', title: '08:00 AM  •  🎒 College Time', done: false},
+                {id: 'tt_t1_7', title: '03:30 PM  •  🌇 Rest & Snack', done: false},
+                {id: 'tt_t1_8', title: '03:45 PM  •  ⭐ DSA Deep Practice', done: false},
+                {id: 'tt_t1_9', title: '05:45 PM  •  ☕ Break', done: false},
+                {id: 'tt_t1_10', title: '06:00 PM  •  ⚙️ DevOps Learning', done: false},
+                {id: 'tt_t1_11', title: '08:00 PM  •  🍽️ Dinner', done: false},
+                {id: 'tt_t1_12', title: '08:30 PM  •  📚 College Studies', done: false},
+                {id: 'tt_t1_13', title: '09:30 PM  •  ☕ Break', done: false},
+                {id: 'tt_t1_14', title: '09:45 PM  •  🚀 Extra Practice', done: false},
+                {id: 'tt_t1_15', title: '10:45 PM  •  🌙 Night Revision', done: false},
+                {id: 'tt_t1_16', title: '11:30 PM  •  💤 Sleep', done: false}
+            ]},
+            { id: 'tt_m2', title: 'SATURDAY', category: 'weekends', topics: [
+                {id: 'tt_t2_1', title: '06:30 AM  •  🌅 Wake up', done: false},
+                {id: 'tt_t2_2', title: '06:40 AM  •  🧠 Easy DSA', done: false},
+                {id: 'tt_t2_3', title: '07:10 AM  •  ☕ Break', done: false},
+                {id: 'tt_t2_4', title: '07:25 AM  •  ⭐ Deep DSA Practice', done: false},
+                {id: 'tt_t2_5', title: '09:25 AM  •  ☕ Break', done: false},
+                {id: 'tt_t2_6', title: '09:40 AM  •  ⚙️ DevOps Session', done: false},
+                {id: 'tt_t2_7', title: '12:00 PM  •  🍽️ Lunch', done: false},
+                {id: 'tt_t2_8', title: '12:30 PM  •  🚀 DevOps Hands-on', done: false},
+                {id: 'tt_t2_9', title: '02:30 PM  •  ☕ Break', done: false},
+                {id: 'tt_t2_10', title: '02:45 PM  •  🧠 DSA Session 2', done: false},
+                {id: 'tt_t2_11', title: '04:15 PM  •  ☕ Break', done: false},
+                {id: 'tt_t2_12', title: '04:30 PM  •  ⚙️ DevOps Project', done: false},
+                {id: 'tt_t2_13', title: '06:00 PM  •  ☕ Break', done: false},
+                {id: 'tt_t2_14', title: '06:15 PM  •  🗣️ English Practice', done: false},
+                {id: 'tt_t2_15', title: '08:00 PM  •  🍽️ Dinner', done: false},
+                {id: 'tt_t2_16', title: '08:30 PM  •  🌙 Night Revision', done: false},
+                {id: 'tt_t2_17', title: '09:30 PM  •  🚀 Light Practice', done: false},
+                {id: 'tt_t2_18', title: '11:30 PM  •  💤 Sleep', done: false}
+            ]},
+            { id: 'tt_m3', title: 'SUNDAY', category: 'weekends', topics: [
+                {id: 'tt_t3_1', title: '06:30 AM  •  🌅 Wake up', done: false},
+                {id: 'tt_t3_2', title: '06:40 AM  •  🧠 Easy DSA', done: false},
+                {id: 'tt_t3_3', title: '07:10 AM  •  ☕ Break', done: false},
+                {id: 'tt_t3_4', title: '07:25 AM  •  ⭐ Weekly DSA Revision', done: false},
+                {id: 'tt_t3_5', title: '09:25 AM  •  ☕ Break', done: false},
+                {id: 'tt_t3_6', title: '09:40 AM  •  ⚙️ DevOps Practice', done: false},
+                {id: 'tt_t3_7', title: '12:00 PM  •  🍽️ Lunch', done: false},
+                {id: 'tt_t3_8', title: '12:30 PM  •  🚀 Project Building', done: false},
+                {id: 'tt_t3_9', title: '03:00 PM  •  ☕ Break', done: false},
+                {id: 'tt_t3_10', title: '03:15 PM  •  🧠 DSA Mock', done: false},
+                {id: 'tt_t3_11', title: '04:45 PM  •  ☕ Break', done: false},
+                {id: 'tt_t3_12', title: '05:00 PM  •  🗣️ English Practice', done: false},
+                {id: 'tt_t3_13', title: '08:00 PM  •  🍽️ Dinner', done: false},
+                {id: 'tt_t3_14', title: '08:30 PM  •  📝 Weekly Planning', done: false}
+            ]},
+            { id: 'tt_m4', title: 'TARGETS', category: 'targets', topics: [
+                {id: 'tt_t4_1', title: '✅ 1 Easy DSA daily morning', done: false},
+                {id: 'tt_t4_2', title: '✅ 3–5 DSA problems daily', done: false},
+                {id: 'tt_t4_3', title: '✅ Hands-on DevOps practice', done: false},
+                {id: 'tt_t4_4', title: '✅ English speaking habit', done: false},
+                {id: 'tt_t4_5', title: '📊 DSA goal: ~20–25 hrs/week', done: false},
+                {id: 'tt_t4_6', title: '📊 DevOps goal: ~22–26 hrs/week', done: false}
+            ]}
+        ];
+
+        // --- 2. STATE & INITIALIZATION ---
+        
+        let activeTab = 'devops'; // 'devops' | 'dsa' | 'timetable' | 'calendar' | 'tools'
+        let timetableTab = 'weekdays'; // 'weekdays' | 'weekends' | 'targets'
+        
+        let roadmapDataDevOps = JSON.parse(localStorage.getItem('roadmapOS_devops_v1')) || defaultDevOpsData;
+        let roadmapDataDSA = JSON.parse(localStorage.getItem('roadmapOS_dsa_v1')) || defaultDSAData;
+        
+        // Bumped version to v4 to ensure the new beautiful • dot structure appears
+        let roadmapDataTimetable = JSON.parse(localStorage.getItem('roadmapOS_timetable_v4')) || defaultTimetableData;
+        roadmapDataTimetable.forEach(m => {
+            if(!m.category) {
+                if(m.id === 'tt_m1') m.category = 'weekdays';
+                else if(m.id === 'tt_m2' || m.id === 'tt_m3') m.category = 'weekends';
+                else if(m.id === 'tt_m4') m.category = 'targets';
+                else m.category = 'weekdays';
+            }
+        });
+
+        let studyDays = JSON.parse(localStorage.getItem('roadmapOS_calendar_v3')) || [];
+        
+        let roadmapData = roadmapDataDevOps;
+
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            document.getElementById('icon-light').classList.add('hidden');
+            document.getElementById('icon-dark').classList.remove('hidden');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            html.classList.toggle('dark');
+            const isDark = html.classList.contains('dark');
+            localStorage.theme = isDark ? 'dark' : 'light';
+            
+            document.getElementById('icon-light').classList.toggle('hidden', isDark);
+            document.getElementById('icon-dark').classList.toggle('hidden', !isDark);
+        }
+
+        function saveData() {
+            if (activeTab === 'devops') {
+                roadmapDataDevOps = roadmapData;
+                localStorage.setItem('roadmapOS_devops_v1', JSON.stringify(roadmapDataDevOps));
+            } else if (activeTab === 'dsa') {
+                roadmapDataDSA = roadmapData;
+                localStorage.setItem('roadmapOS_dsa_v1', JSON.stringify(roadmapDataDSA));
+            } else if (activeTab === 'timetable') {
+                roadmapDataTimetable = roadmapData;
+                localStorage.setItem('roadmapOS_timetable_v4', JSON.stringify(roadmapDataTimetable));
+            }
+            updateOverallProgress();
+        }
+
+        function saveCalendarData() {
+            localStorage.setItem('roadmapOS_calendar_v3', JSON.stringify(studyDays));
+            updateStreak();
+        }
+        function generateId() { return Math.random().toString(36).substr(2, 9); }
+
+
+        // --- 3. UI RENDERING ---
+        function renderRoadmap() {
+            if(!['devops', 'dsa', 'timetable'].includes(activeTab)) return;
+
+            if(activeTab === 'timetable') {
+                renderTimetableHTML();
+            } else {
+                renderRoadmapHTML();
+            }
+            setupDragAndDrop();
+            updateOverallProgress();
+        }
+
+        function renderRoadmapHTML() {
+            const container = document.getElementById('modules-container');
+            container.innerHTML = '';
+            const brandClass = activeTab === 'dsa' ? 'purpleBrand' : 'brand';
+
+            roadmapData.forEach((module, mIndex) => {
+                const completedTopics = module.topics.filter(t => t.done).length;
+                const totalTopics = module.topics.length;
+                const progress = totalTopics === 0 ? 0 : Math.round((completedTopics / totalTopics) * 100);
+                const isComplete = progress === 100 && totalTopics > 0;
+
+                const moduleDiv = document.createElement('div');
+                moduleDiv.className = `bg-white dark:bg-dark-panel rounded-2xl border ${isComplete ? 'module-completed border-success-500/40' : 'border-slate-200 dark:border-dark-border'} shadow-sm overflow-hidden transition-all duration-500 group relative`;
+                
+                let badgeHtml = '';
+                if(isComplete) badgeHtml = `<span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-success-500/10 text-success-600 dark:text-success-400 border border-success-500/20"><i class="fa-solid fa-check-double mr-1"></i> Completed</span>`;
+                else if (progress > 0) badgeHtml = `<span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-${brandClass}-50 dark:bg-${brandClass}-500/10 text-${brandClass}-600 dark:text-${brandClass}-400 border border-${brandClass}-200 dark:border-${brandClass}-500/20"><i class="fa-solid fa-spinner fa-spin-pulse mr-1"></i> In Progress</span>`;
+                else badgeHtml = `<span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-slate-100 dark:bg-dark-bg text-slate-500 border border-slate-200 dark:border-dark-border">Not Started</span>`;
+
+                moduleDiv.innerHTML = `
+                    <div class="p-6 md:p-8 border-b border-slate-100 dark:border-dark-border flex flex-col gap-4 bg-slate-50/30 dark:bg-[#050505]">
+                        <div class="flex justify-between items-start gap-4">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-3 mb-3">
+                                    ${badgeHtml}
+                                    <span class="text-slate-400 text-xs font-bold tracking-widest">#${String(mIndex + 1).padStart(2, '0')}</span>
+                                </div>
+                                <h3 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
+                                    <span contenteditable="true" onblur="updateText('module', '${module.id}', null, this.innerText)" class="outline-none focus:ring-2 focus:ring-${brandClass}-500/50 rounded">${module.title}</span>
+                                </h3>
+                            </div>
+                            <button onclick="deleteModule('${module.id}')" class="w-10 h-10 flex items-center justify-center rounded-xl text-slate-300 hover:text-red-500 hover:bg-red-50 dark:text-slate-600 dark:hover:text-red-400 dark:hover:bg-red-500/10 transition-colors flex-shrink-0" title="Delete Module">
+                                <i class="fa-regular fa-trash-can"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="flex items-center gap-4 mt-2">
+                            <div class="flex-1 bg-slate-200 dark:bg-dark-bg rounded-full h-2.5 overflow-hidden shadow-inner border border-slate-300/50 dark:border-white/5">
+                                <div class="${isComplete ? 'bg-gradient-to-r from-success-400 to-success-500 shadow-glow-success' : `bg-gradient-to-r from-${brandClass}-400 to-${brandClass}-600 shadow-glow-${brandClass === 'brand' ? '' : brandClass.replace('Brand','')}`} h-full rounded-full transition-all duration-1000 ease-out relative" style="width: ${progress}%"></div>
+                            </div>
+                            <span class="text-sm font-black ${isComplete ? 'text-success-500' : 'text-slate-700 dark:text-white'} w-12 text-right">${progress}%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 md:p-6 bg-white dark:bg-dark-panel">
+                        <ul class="space-y-2.5 topic-list min-h-[30px]" data-module-id="${module.id}">
+                            ${module.topics.length === 0 ? `<li class="text-center p-6 text-slate-400 dark:text-slate-600 text-sm font-medium border-2 border-dashed border-slate-200 dark:border-dark-border rounded-xl">No tasks defined.</li>` : ''}
+                            ${module.topics.map(topic => `
+                                <li class="drag-item group flex items-center gap-4 p-3.5 rounded-xl border border-transparent hover:bg-slate-50 dark:hover:bg-[#111] hover:border-slate-200 dark:hover:border-[#222] transition-all cursor-move relative" draggable="true" data-topic-id="${topic.id}">
+                                    <div class="text-slate-300 dark:text-slate-600 cursor-grab active:cursor-grabbing hover:text-${brandClass}-500 transition-colors w-4" title="Drag to reorder"><i class="fa-solid fa-grip-lines"></i></div>
+                                    <label class="relative flex items-center justify-center cursor-pointer flex-shrink-0 check-anim">
+                                        <input type="checkbox" ${topic.done ? 'checked' : ''} onchange="toggleTopic('${module.id}', '${topic.id}')" class="peer sr-only">
+                                        <div class="w-6 h-6 rounded border-[2px] ${topic.done ? 'border-success-500 bg-success-500 shadow-glow-success' : 'border-slate-300 dark:border-slate-600 bg-transparent'} peer-focus:ring-2 peer-focus:ring-${brandClass}-500/50 transition-all flex items-center justify-center overflow-hidden">
+                                            <i class="fa-solid fa-check text-white text-xs check-icon transition-all duration-300"></i>
+                                        </div>
+                                    </label>
+                                    <span contenteditable="true" onblur="updateText('topic', '${module.id}', '${topic.id}', this.innerText)" class="flex-1 outline-none text-[15px] ${topic.done ? 'text-slate-400 dark:text-slate-600 line-through decoration-slate-300 dark:decoration-slate-700' : 'text-slate-700 dark:text-slate-200 font-medium'} transition-all">${topic.title}</span>
+                                    <button onclick="deleteTopic('${module.id}', '${topic.id}')" class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50 dark:text-slate-600 dark:hover:text-red-400 dark:hover:bg-red-500/10 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-all flex-shrink-0" title="Delete"><i class="fa-solid fa-xmark"></i></button>
+                                </li>
+                            `).join('')}
+                        </ul>
+                        <button onclick="addTopic('${module.id}')" class="mt-4 text-sm font-bold text-slate-500 dark:text-slate-500 hover:text-${brandClass}-600 dark:hover:text-white bg-slate-50 dark:bg-dark-bg hover:bg-${brandClass}-50 dark:hover:bg-[#1a1a1a] py-3 rounded-xl transition-all flex items-center gap-2 w-full justify-center border border-slate-200 dark:border-dark-border hover:border-${brandClass}-200 dark:hover:border-slate-700 shadow-sm">
+                            <i class="fa-solid fa-plus text-xs"></i> Add Subtopic
+                        </button>
+                    </div>
+                `;
+                container.appendChild(moduleDiv);
+            });
+        }
+
+        // Sub-navigation logic for Timetable Tabs
+        function setTimetableTab(tab) {
+            timetableTab = tab;
+            const tabs = ['weekdays', 'weekends', 'targets'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`tt-tab-${t}`);
+                if(t === tab) {
+                    btn.className = 'flex-1 py-3 px-6 rounded-xl bg-white dark:bg-[#222] text-emeraldBrand-600 dark:text-emeraldBrand-400 font-bold shadow-sm transition-all text-sm border border-slate-200/50 dark:border-[#333] tracking-wide';
+                } else {
+                    btn.className = 'flex-1 py-3 px-6 rounded-xl text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 font-semibold transition-all text-sm border border-transparent tracking-wide';
+                }
+            });
+            renderTimetableHTML();
+            setupDragAndDrop();
+        }
+
+        function renderTimetableHTML() {
+            const container = document.getElementById('timetable-board');
+            container.innerHTML = '';
+            
+            // Filter by the current Timetable Tab (weekdays, weekends, targets)
+            const filteredData = roadmapData.filter(m => m.category === timetableTab);
+
+            if (filteredData.length === 0) {
+                 container.innerHTML = `<div class="w-full text-center p-12 text-slate-500 font-medium">No items in this section. Add a new column to start planning!</div>`;
+            }
+            
+            filteredData.forEach((module, mIndex) => {
+                const colDiv = document.createElement('div');
+                // Removed overflow restrictions so columns grow to exact content height natively (freestyle cards)
+                colDiv.className = 'flex-shrink-0 w-80 md:w-[400px] bg-slate-100/50 dark:bg-[#0a0a0a] rounded-[2rem] flex flex-col border border-slate-200/80 dark:border-[#1a1a1a] shadow-xl shadow-slate-200/20 dark:shadow-none snap-center h-max pb-2';
+                
+                colDiv.innerHTML = `
+                    <div class="p-6 border-b border-slate-200/80 dark:border-[#1a1a1a] bg-white dark:bg-[#111] rounded-t-[2rem] flex justify-between items-center z-10 shrink-0">
+                        <h3 contenteditable="true" onblur="updateText('module', '${module.id}', null, this.innerText)" class="font-black text-xl text-slate-800 dark:text-white outline-none focus:ring-2 focus:ring-emeraldBrand-500/50 rounded px-1 -ml-1 uppercase tracking-wider">${module.title}</h3>
+                        <button onclick="deleteModule('${module.id}')" class="text-slate-400 hover:text-red-500 transition-colors shrink-0 p-1"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                    
+                    <div class="p-5 flex-1 flex flex-col gap-4 topic-list min-h-[150px]" data-module-id="${module.id}">
+                        ${module.topics.length === 0 ? `<div class="text-center p-6 text-slate-400 dark:text-slate-600 text-sm font-medium border-2 border-dashed border-slate-300 dark:border-[#333] rounded-xl flex-1 flex items-center justify-center">Drag items here</div>` : ''}
+                        ${module.topics.map(topic => `
+                            <div class="drag-item group flex flex-col gap-2 p-5 rounded-2xl bg-white dark:bg-[#161616] border border-slate-200/80 dark:border-[#222] border-l-[6px] ${topic.done ? 'border-l-success-500 opacity-70 bg-slate-50 dark:bg-[#111]' : 'border-l-emeraldBrand-500'} shadow-sm hover:shadow-lg transition-all duration-300 cursor-move relative" draggable="true" data-topic-id="${topic.id}">
+                                <div class="flex gap-4 items-start">
+                                    <div class="mt-1 text-slate-300 dark:text-slate-600 cursor-grab active:cursor-grabbing hover:text-emeraldBrand-500 transition-colors shrink-0" title="Drag to move"><i class="fa-solid fa-grip-vertical text-sm"></i></div>
+                                    <div class="flex-1 flex flex-col pt-0.5">
+                                        <span contenteditable="true" onblur="updateText('topic', '${module.id}', '${topic.id}', this.innerText)" class="outline-none text-[15px] font-semibold tabular-nums leading-relaxed ${topic.done ? 'text-slate-400 dark:text-slate-500 line-through decoration-slate-400' : 'text-slate-700 dark:text-slate-200'} focus:ring-2 focus:ring-emeraldBrand-500/30 rounded px-1 -ml-1">${topic.title}</span>
+                                    </div>
+                                    <label class="relative flex items-center justify-center cursor-pointer check-anim shrink-0 ml-2 mt-0.5">
+                                        <input type="checkbox" ${topic.done ? 'checked' : ''} onchange="toggleTopic('${module.id}', '${topic.id}')" class="peer sr-only">
+                                        <div class="w-6 h-6 rounded border-2 ${topic.done ? 'border-success-500 bg-success-500 shadow-glow-success' : 'border-slate-300 dark:border-slate-600 bg-transparent'} peer-focus:ring-2 peer-focus:ring-emeraldBrand-500/50 transition-all flex items-center justify-center overflow-hidden">
+                                            <i class="fa-solid fa-check text-white text-xs check-icon transition-all duration-300"></i>
+                                        </div>
+                                    </label>
+                                </div>
+                                <button onclick="deleteTopic('${module.id}', '${topic.id}')" class="absolute -top-3 -right-3 w-7 h-7 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-all shadow-md flex items-center justify-center text-[10px] scale-75 hover:scale-100 z-10"><i class="fa-solid fa-xmark"></i></button>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="p-4 bg-transparent shrink-0">
+                        <button onclick="addTopic('${module.id}')" class="w-full py-3 rounded-xl bg-white dark:bg-[#151515] hover:bg-emeraldBrand-50 dark:hover:bg-emeraldBrand-500/10 text-slate-500 dark:text-slate-400 hover:text-emeraldBrand-600 dark:hover:text-emeraldBrand-400 font-bold text-sm transition-colors flex items-center justify-center gap-2 border border-slate-200/80 dark:border-[#222]">
+                            <i class="fa-solid fa-plus"></i> Add Block
+                        </button>
+                    </div>
+                `;
+                container.appendChild(colDiv);
+            });
+        }
+
+
+        // --- 4. DATA MUTATION ---
+        function toggleTopic(moduleId, topicId) {
+            const module = roadmapData.find(m => m.id === moduleId);
+            const topic = module.topics.find(t => t.id === topicId);
+            topic.done = !topic.done;
+            saveData();
+            renderRoadmap();
+        }
+
+        function updateText(type, id1, id2, newText) {
+            if(type === 'module') roadmapData.find(m => m.id === id1).title = newText;
+            else if (type === 'topic') roadmapData.find(m => m.id === id1).topics.find(t => t.id === id2).title = newText;
+            saveData();
+        }
+
+        function addModule() {
+            if(activeTab === 'timetable') {
+                roadmapData.push({ id: 'm_' + generateId(), title: '✨ New Column', category: timetableTab, topics: [] });
+            } else {
+                roadmapData.push({ id: 'm_' + generateId(), title: '✨ New Module', topics: [] });
+            }
+            saveData();
+            renderRoadmap();
+            
+            if(activeTab === 'timetable') {
+                const board = document.getElementById('timetable-board');
+                board.scrollLeft = board.scrollWidth;
+            } else {
+                window.scrollTo(0, document.body.scrollHeight);
+            }
+        }
+
+        function deleteModule(moduleId) {
+            let msg = activeTab === 'timetable' ? "Delete this entire column?" : "Delete this entire module and its topics?";
+            if(confirm(msg)) {
+                roadmapData = roadmapData.filter(m => m.id !== moduleId);
+                saveData();
+                renderRoadmap();
+            }
+        }
+
+        function addTopic(moduleId) {
+            const module = roadmapData.find(m => m.id === moduleId);
+            module.topics.push({ id: 't_' + generateId(), title: activeTab === 'timetable' ? '00:00 AM  •  New Block' : 'New Topic', done: false });
+            saveData();
+            renderRoadmap();
+        }
+
+        function deleteTopic(moduleId, topicId) {
+            const module = roadmapData.find(m => m.id === moduleId);
+            module.topics = module.topics.filter(t => t.id !== topicId);
+            saveData();
+            renderRoadmap();
+        }
+
+        function updateOverallProgress() {
+            let currentRoadmapData = roadmapDataDevOps;
+            if(activeTab === 'dsa') currentRoadmapData = roadmapDataDSA;
+            if(activeTab === 'timetable') currentRoadmapData = roadmapDataTimetable;
+
+            let total = 0, done = 0, modulesCompleted = 0;
+            currentRoadmapData.forEach(m => {
+                total += m.topics.length;
+                const mDone = m.topics.filter(t => t.done).length;
+                done += mDone;
+                if(mDone === m.topics.length && m.topics.length > 0) modulesCompleted++;
+            });
+            
+            const percent = total === 0 ? 0 : Math.round((done/total)*100);
+            
+            // Stats updates (Only for DevOps/DSA now, as it's hidden on timetable)
+            if (['devops', 'dsa'].includes(activeTab)) {
+                document.getElementById('stat-modules').innerText = `${modulesCompleted} / ${currentRoadmapData.length}`;
+                document.getElementById('stat-topics').innerText = total - done;
+                document.getElementById('stat-title-1').innerText = 'Modules Done';
+                document.getElementById('stat-title-2').innerText = 'Topics Left';
+            }
+
+            let circleColor = '#3b82f6';
+            let labelHtml = 'DevOps<br>Done';
+
+            if (percent === 100) {
+                circleColor = '#10b981';
+            } else if (activeTab === 'dsa' || (document.getElementById('nav-progress-label').innerHTML.includes('DSA') && ['calendar','tools'].includes(activeTab))) {
+                circleColor = '#a855f7';
+                labelHtml = 'DSA<br>Done';
+            } else if (activeTab === 'timetable' || (document.getElementById('nav-progress-label').innerHTML.includes('Routine') && ['calendar','tools'].includes(activeTab))) {
+                circleColor = '#10b981';
+                labelHtml = 'Routine<br>Done';
+            }
+
+            if(['devops', 'dsa', 'timetable'].includes(activeTab)) {
+                document.getElementById('nav-progress-label').innerHTML = labelHtml;
+            }
+            
+            document.getElementById('nav-progress-text').innerText = `${percent}%`;
+            document.getElementById('nav-circle-progress').setAttribute('stroke-dasharray', `${percent}, 100`);
+            document.getElementById('nav-circle-progress').style.stroke = circleColor;
+        }
+
+        // --- 5. DRAG AND DROP (Safe Multi-Tab Update) ---
+        let draggedElement = null;
+
+        function setupDragAndDrop() {
+            const items = document.querySelectorAll('.drag-item');
+            const lists = document.querySelectorAll('.topic-list');
+
+            let borderClass = '!border-brand-500';
+            if (activeTab === 'dsa') borderClass = '!border-purpleBrand-500';
+            if (activeTab === 'timetable') borderClass = '!border-emeraldBrand-500';
+
+            items.forEach(item => {
+                item.removeEventListener('dragstart', handleDragStart);
+                item.removeEventListener('dragend', handleDragEnd);
+                
+                item.addEventListener('dragstart', handleDragStart);
+                item.addEventListener('dragend', handleDragEnd);
+            });
+
+            function handleDragStart(e) {
+                if(document.activeElement.getAttribute('contenteditable') === 'true') { e.preventDefault(); return; }
+                draggedElement = this;
+                setTimeout(() => this.classList.add('dragging'), 0);
+                e.dataTransfer.effectAllowed = 'move';
+            }
+
+            function handleDragEnd() {
+                this.classList.remove('dragging');
+                document.querySelectorAll('.drag-over-top, .drag-over-bottom').forEach(el => el.classList.remove('drag-over-top', 'drag-over-bottom', '!border-brand-500', '!border-purpleBrand-500', '!border-emeraldBrand-500'));
+                draggedElement = null;
+                updateStateFromDOM();
+            }
+
+            lists.forEach(list => {
+                list.removeEventListener('dragover', handleDragOver);
+                list.removeEventListener('dragleave', handleDragLeave);
+                
+                list.addEventListener('dragover', handleDragOver);
+                list.addEventListener('dragleave', handleDragLeave);
+                
+                function handleDragOver(e) {
+                    e.preventDefault();
+                    if(!draggedElement) return;
+                    const afterElementData = getDragAfterElement(list, e.clientY);
+                    list.querySelectorAll('.drag-item').forEach(el => el.classList.remove('drag-over-top', 'drag-over-bottom', '!border-brand-500', '!border-purpleBrand-500', '!border-emeraldBrand-500'));
+                    
+                    if (afterElementData.element == null) list.appendChild(draggedElement);
+                    else {
+                        afterElementData.element.classList.add('drag-over-top', borderClass);
+                        list.insertBefore(draggedElement, afterElementData.element);
+                    }
+                }
+                
+                function handleDragLeave(e) {
+                    if(e.target.classList.contains('drag-item')) e.target.classList.remove('drag-over-top', 'drag-over-bottom', '!border-brand-500', '!border-purpleBrand-500', '!border-emeraldBrand-500');
+                }
+            });
+        }
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.drag-item:not(.dragging)')];
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) return { offset: offset, element: child };
+                else return closest;
+            }, { offset: Number.NEGATIVE_INFINITY });
+        }
+
+        function updateStateFromDOM() {
+            // Safely parse so we don't destroy unrendered tabs (like "Weekends" while dragging in "Weekdays")
+            const newRoadmapData = JSON.parse(JSON.stringify(roadmapData)); 
+            
+            document.querySelectorAll('.topic-list').forEach(list => {
+                const moduleId = list.getAttribute('data-module-id');
+                const moduleIndex = newRoadmapData.findIndex(m => m.id === moduleId);
+                
+                if (moduleIndex !== -1) {
+                    const newTopics = [];
+                    list.querySelectorAll('.drag-item[data-topic-id]').forEach(li => {
+                        const topicId = li.getAttribute('data-topic-id');
+                        let foundTopic = null;
+                        // Search for the full object in the original data
+                        roadmapData.forEach(m => { 
+                            const t = m.topics.find(x => x.id === topicId); 
+                            if(t) foundTopic = JSON.parse(JSON.stringify(t)); 
+                        });
+                        if(foundTopic) newTopics.push(foundTopic);
+                    });
+                    newRoadmapData[moduleIndex].topics = newTopics;
+                }
+            });
+            roadmapData = newRoadmapData;
+            saveData();
+            renderRoadmap(); 
+        }
+
+        // --- 6. NAVIGATION & TAB SWITCHING ---
+        let currentMonthDate = new Date();
+
+        function switchTab(tab) {
+            activeTab = tab;
+            const isRoadmapOrTimetable = ['devops', 'dsa', 'timetable'].includes(tab);
+            
+            document.getElementById('shared-roadmap-header').classList.toggle('hidden', !isRoadmapOrTimetable);
+            
+            // Hide Dashboard Stats completely for timetable
+            const statsContainer = document.getElementById('roadmap-stats-container');
+            if(tab === 'timetable') {
+                statsContainer.classList.add('hidden');
+            } else if(isRoadmapOrTimetable) {
+                statsContainer.classList.remove('hidden');
+            }
+
+            document.getElementById('roadmap-list-view').classList.toggle('hidden', !['devops', 'dsa'].includes(tab));
+            document.getElementById('timetable-board-view').classList.toggle('hidden', tab !== 'timetable');
+            
+            document.getElementById('calendar-view').classList.toggle('hidden', tab !== 'calendar');
+            document.getElementById('tools-view').classList.toggle('hidden', tab !== 'tools');
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.className = 'nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-dark-border hover:text-slate-900 dark:hover:text-white font-semibold transition-all group border border-transparent';
+            });
+
+            const activeBtn = document.getElementById(`nav-${tab}`);
+            if(tab === 'devops') {
+                activeBtn.className = 'nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 font-semibold transition-all group border border-brand-100 dark:border-brand-500/20';
+            } else if (tab === 'dsa') {
+                activeBtn.className = 'nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-purpleBrand-50 dark:bg-purpleBrand-500/10 text-purpleBrand-600 dark:text-purpleBrand-400 font-semibold transition-all group border border-purpleBrand-100 dark:border-purpleBrand-500/20';
+            } else if (tab === 'timetable') {
+                activeBtn.className = 'nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-emeraldBrand-50 dark:bg-emeraldBrand-500/10 text-emeraldBrand-600 dark:text-emeraldBrand-400 font-semibold transition-all group border border-emeraldBrand-100 dark:border-emeraldBrand-500/20';
+            } else if (tab === 'tools') {
+                activeBtn.className = 'nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-roseBrand-50 dark:bg-roseBrand-500/10 text-roseBrand-600 dark:text-roseBrand-400 font-semibold transition-all group border border-roseBrand-100 dark:border-roseBrand-500/20';
+            } else {
+                activeBtn.className = 'nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-100 dark:bg-dark-border text-slate-900 dark:text-white font-semibold transition-all group border border-slate-300 dark:border-slate-700';
+            }
+            
+            if (isRoadmapOrTimetable) {
+                if (tab === 'devops') roadmapData = roadmapDataDevOps;
+                if (tab === 'dsa') roadmapData = roadmapDataDSA;
+                if (tab === 'timetable') roadmapData = roadmapDataTimetable;
+                
+                const titleEl = document.getElementById('roadmap-header-title');
+                const descEl = document.getElementById('roadmap-header-desc');
+
+                if (tab === 'devops') {
+                    titleEl.innerHTML = 'DevOps <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-brand-600">Engineering</span>';
+                    descEl.innerText = 'Master the cloud native ecosystem. Track your progress, edit topics inline, and build your career roadmap.';
+                } else if (tab === 'dsa') {
+                    titleEl.innerHTML = 'DSA & C++ <span class="text-transparent bg-clip-text bg-gradient-to-r from-purpleBrand-400 to-purpleBrand-600">Mastery</span>';
+                    descEl.innerText = 'Master problem-solving and algorithms. Track your learning phases, analyze complexity, and build strong logical foundations.';
+                } else if (tab === 'timetable') {
+                    titleEl.innerHTML = 'Daily <span class="text-transparent bg-clip-text bg-gradient-to-r from-emeraldBrand-400 to-emeraldBrand-600">Routine</span>';
+                    descEl.innerText = 'Master your schedule. Switch tabs, drag, drop, and edit your daily time blocks to build bulletproof consistency.';
+                }
+
+                renderRoadmap();
+            } else if (tab === 'calendar') {
+                renderCalendar();
+            } else if (tab === 'tools') {
+                updateOverallProgress();
+            }
+            
+            document.getElementById('main-scroll').scrollTop = 0;
+        }
+
+        // --- Consistency, Calendar & Tools Logic remains exactly the same ---
+        function updateStreak() {
+            if(studyDays.length === 0) { 
+                const streakEls = document.querySelectorAll('#stat-streak');
+                streakEls.forEach(el => el.innerText = '0 Days');
+                return; 
+            }
+            let streak = 0;
+            let checkDate = new Date();
+            checkDate.setHours(0,0,0,0);
+            const fmt = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+            let isTodayLogged = studyDays.includes(fmt(checkDate));
+            if(!isTodayLogged) checkDate.setDate(checkDate.getDate() - 1);
+            while(true) {
+                if(studyDays.includes(fmt(checkDate))) {
+                    streak++;
+                    checkDate.setDate(checkDate.getDate() - 1);
+                } else { break; }
+            }
+            const streakEls = document.querySelectorAll('#stat-streak');
+            streakEls.forEach(el => el.innerText = `${streak} ${streak === 1 ? 'Day' : 'Days'}`);
+        }
+
+        function renderCalendar() {
+            const grid = document.getElementById('calendar-grid');
+            grid.innerHTML = '';
+            const year = currentMonthDate.getFullYear();
+            const month = currentMonthDate.getMonth();
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            document.getElementById('current-month-year').innerText = `${monthNames[month]} ${year}`;
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            for(let i = 0; i < firstDay; i++) grid.innerHTML += `<div class="aspect-square"></div>`;
+            const today = new Date();
+            for(let i = 1; i <= daysInMonth; i++) {
+                const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                const isStudied = studyDays.includes(dateString);
+                const isToday = today.getDate() === i && today.getMonth() === month && today.getFullYear() === year;
+                let cellClasses = `aspect-square flex flex-col items-center justify-center rounded-2xl cursor-pointer transition-all border-2 group relative overflow-hidden font-bold select-none `;
+                if (isStudied) cellClasses += `bg-success-500 border-success-400 text-white shadow-glow-success hover:bg-success-400 transform hover:scale-105 `;
+                else cellClasses += `bg-slate-50 dark:bg-dark-bg border-slate-200 dark:border-dark-border text-slate-500 dark:text-slate-500 hover:border-brand-400 dark:hover:border-brand-500 `;
+                if (isToday && !isStudied) cellClasses += `ring-4 ring-brand-500/20 dark:ring-brand-500/20 `;
+
+                grid.innerHTML += `<div onclick="toggleStudyDay('${dateString}')" class="${cellClasses}">
+                        <span class="z-10 text-lg md:text-xl">${i}</span>
+                        ${isStudied ? `<i class="fa-solid fa-fire text-[10px] mt-1 text-white z-10"></i>` : `<span class="h-4"></span>`}
+                    </div>`;
+            }
+        }
+
+        function toggleStudyDay(dateString) {
+            if(studyDays.includes(dateString)) studyDays = studyDays.filter(d => d !== dateString);
+            else studyDays.push(dateString);
+            saveCalendarData();
+            renderCalendar();
+        }
+
+        function changeMonth(delta) {
+            currentMonthDate.setMonth(currentMonthDate.getMonth() + delta);
+            renderCalendar();
+        }
+
+        // Tools
+        let alarmTimeStr = null;
+        let alarmRinging = false;
+
+        function updateClock() {
+            const now = new Date();
+            let h = now.getHours();
+            let m = now.getMinutes().toString().padStart(2, '0');
+            let s = now.getSeconds().toString().padStart(2, '0');
+            let ampm = h >= 12 ? 'PM' : 'AM';
+            h = h % 12; h = h ? h : 12; h = h.toString().padStart(2, '0');
+            document.getElementById('digital-clock').innerHTML = `${h}<span class="text-slate-300 dark:text-slate-700 mx-1 lg:mx-2 font-light">:</span>${m}<span class="text-slate-300 dark:text-slate-700 mx-1 lg:mx-2 font-light">:</span>${s} <span class="text-3xl md:text-5xl text-roseBrand-500 font-semibold tracking-tight ml-2 md:ml-4">${ampm}</span>`;
+            document.getElementById('digital-date').innerText = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            if (alarmTimeStr && !alarmRinging) {
+                let current24H = now.getHours().toString().padStart(2, '0');
+                let currentM = now.getMinutes().toString().padStart(2, '0');
+                if (alarmTimeStr === `${current24H}:${currentM}` && now.getSeconds() === 0) triggerAlarm();
+            }
+        }
+        setInterval(updateClock, 1000); updateClock();
+
+        let pomoTime = 25 * 60; let pomoMode = 'work'; let pomoInterval = null; let isPomoRunning = false;
+        function updatePomoDisplay() {
+            let m = Math.floor(pomoTime / 60).toString().padStart(2, '0');
+            let s = (pomoTime % 60).toString().padStart(2, '0');
+            document.getElementById('pomo-display').innerHTML = `${m}<span class="text-slate-300 dark:text-slate-700 mx-1 font-light">:</span>${s}`;
+            document.title = isPomoRunning ? `(${m}:${s}) Roadmap OS` : `Roadmap OS | Premium Learning Dashboard`;
+        }
+        function setPomoMode(mode) {
+            if(isPomoRunning) togglePomo();
+            pomoMode = mode; pomoTime = mode === 'work' ? 25 * 60 : 5 * 60;
+            document.getElementById('btn-pomo-work').className = mode === 'work' ? 'px-3 py-1.5 rounded-md bg-roseBrand-500 text-white transition-all' : 'px-3 py-1.5 rounded-md bg-slate-100 dark:bg-dark-bg text-slate-500 transition-all hover:bg-slate-200 dark:hover:text-slate-300';
+            document.getElementById('btn-pomo-break').className = mode === 'break' ? 'px-3 py-1.5 rounded-md bg-roseBrand-500 text-white transition-all' : 'px-3 py-1.5 rounded-md bg-slate-100 dark:bg-dark-bg text-slate-500 transition-all hover:bg-slate-200 dark:hover:text-slate-300';
+            document.getElementById('pomo-status').innerText = mode === 'work' ? 'Ready to focus' : 'Time for a break';
+            updatePomoDisplay();
+        }
+        function togglePomo() {
+            const btn = document.getElementById('pomo-toggle-btn');
+            if (isPomoRunning) {
+                clearInterval(pomoInterval); isPomoRunning = false;
+                btn.innerText = "Resume"; btn.className = "py-4 rounded-xl bg-slate-800 text-white hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 font-bold transition-all active:scale-95";
+                document.getElementById('pomo-status').innerText = "Paused";
+            } else {
+                isPomoRunning = true; btn.innerText = "Pause"; btn.className = "py-4 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold transition-all shadow-lg shadow-orange-500/20 active:scale-95";
+                document.getElementById('pomo-status').innerText = pomoMode === 'work' ? "Focusing..." : "Resting...";
+                pomoInterval = setInterval(() => {
+                    if (pomoTime > 0) { pomoTime--; updatePomoDisplay(); }
+                    else { clearInterval(pomoInterval); isPomoRunning = false; triggerAlarm(); setPomoMode(pomoMode === 'work' ? 'break' : 'work'); }
+                }, 1000);
+            }
+            updatePomoDisplay();
+        }
+        function resetPomo() {
+            if (isPomoRunning) togglePomo();
+            setPomoMode(pomoMode);
+            document.getElementById('pomo-toggle-btn').innerText = "Start";
+            document.getElementById('pomo-toggle-btn').className = "py-4 rounded-xl bg-roseBrand-500 hover:bg-roseBrand-600 text-white font-bold transition-all shadow-lg shadow-roseBrand-500/20 active:scale-95";
+        }
+
+        let swTime = 0; let swInterval = null; let isSwRunning = false; let swStartTime = 0;
+        function updateSwDisplay() {
+            let h = Math.floor(swTime / 3600000).toString().padStart(2, '0');
+            let m = Math.floor((swTime % 3600000) / 60000).toString().padStart(2, '0');
+            let s = Math.floor((swTime % 60000) / 1000).toString().padStart(2, '0');
+            let ms = Math.floor((swTime % 1000) / 10).toString().padStart(2, '0');
+            if (h === '00') document.getElementById('sw-display').innerHTML = `${m}<span class="text-slate-300 dark:text-slate-700 mx-1 font-light">:</span>${s}<span class="text-xl md:text-3xl text-slate-400 font-medium ml-1">.${ms}</span>`;
+            else document.getElementById('sw-display').innerHTML = `${h}<span class="text-slate-300 dark:text-slate-700 mx-1 font-light">:</span>${m}<span class="text-slate-300 dark:text-slate-700 mx-1 font-light">:</span>${s}<span class="text-xl md:text-3xl text-slate-400 font-medium ml-1">.${ms}</span>`;
+        }
+        function toggleSw() {
+            const btn = document.getElementById('sw-toggle-btn');
+            if (isSwRunning) {
+                clearInterval(swInterval); isSwRunning = false;
+                btn.innerText = "Resume"; btn.className = "py-4 rounded-xl bg-slate-800 text-white hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 font-bold transition-all active:scale-95";
+            } else {
+                isSwRunning = true; btn.innerText = "Pause"; btn.className = "py-4 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold transition-all shadow-lg shadow-orange-500/20 active:scale-95";
+                swStartTime = Date.now() - swTime;
+                swInterval = setInterval(() => { swTime = Date.now() - swStartTime; updateSwDisplay(); }, 10);
+            }
+        }
+        function resetSw() {
+            if (isSwRunning) toggleSw();
+            swTime = 0; updateSwDisplay();
+            document.getElementById('sw-toggle-btn').innerText = "Start";
+            document.getElementById('sw-toggle-btn').className = "py-4 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-bold transition-all shadow-lg shadow-brand-500/20 active:scale-95";
+        }
+
+        function setAlarm() {
+            const input = document.getElementById('alarm-input').value;
+            if(!input) return;
+            alarmTimeStr = input;
+            let [h, m] = input.split(':');
+            let ampm = h >= 12 ? 'PM' : 'AM';
+            h = h % 12; h = h ? h : 12; 
+            document.getElementById('alarm-display-time').innerText = `${h}:${m} ${ampm}`;
+            document.getElementById('alarm-status-container').classList.remove('hidden');
+            const btn = document.getElementById('alarm-set-btn');
+            btn.innerText = "Saved"; btn.className = "py-4 rounded-xl bg-success-500 text-white font-bold transition-all shadow-lg shadow-success-500/20 active:scale-95";
+            setTimeout(() => {
+                btn.innerText = "Update"; btn.className = "py-4 rounded-xl bg-purpleBrand-500 hover:bg-purpleBrand-600 text-white font-bold transition-all shadow-lg shadow-purpleBrand-500/20 active:scale-95";
+            }, 2000);
+        }
+        function clearAlarm() {
+            alarmTimeStr = null; document.getElementById('alarm-input').value = '';
+            document.getElementById('alarm-status-container').classList.add('hidden');
+            document.getElementById('alarm-set-btn').innerText = "Set";
+            document.getElementById('alarm-set-btn').className = "py-4 rounded-xl bg-purpleBrand-500 hover:bg-purpleBrand-600 text-white font-bold transition-all shadow-lg shadow-purpleBrand-500/20 active:scale-95";
+        }
+        function triggerAlarm() {
+            alarmRinging = true;
+            const modal = document.getElementById('alarm-modal');
+            const content = document.getElementById('alarm-modal-content');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            setTimeout(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); }, 10);
+            if(navigator.vibrate) navigator.vibrate([500, 250, 500, 250, 500]);
+        }
+        function dismissAlarm() {
+            alarmRinging = false;
+            const modal = document.getElementById('alarm-modal');
+            const content = document.getElementById('alarm-modal-content');
+            modal.classList.add('opacity-0'); content.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300);
+            clearAlarm();
+        }
+
+        // --- INIT ---
+        switchTab('timetable'); // Load straight into timetable to see the changes
+        updateStreak();
+    </script>
+</body>
+</html>

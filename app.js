@@ -667,5 +667,12 @@ function dismissAlarm() {
 }
 
 // --- INIT ---
-switchTab('timetable'); // Load straight into timetable to see the changes
+const pathName = window.location.pathname.toLowerCase();
+let initialTab = 'timetable';
+if (pathName.includes('devops')) initialTab = 'devops';
+else if (pathName.includes('dsa')) initialTab = 'dsa';
+else if (pathName.includes('tools')) initialTab = 'tools';
+else if (pathName.includes('calendar')) initialTab = 'calendar';
+
+switchTab(initialTab);
 updateStreak();
